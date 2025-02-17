@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokémon Card Market Tracker</title>
+    <script src="https://cdn.socket.io/4.5.0/socket.io.min.js"></script>
+</head>
+<body>
+    <h1>Pokémon Card Market Tracker</h1>
+    <input type="text" id="cardName" placeholder="Enter Pokémon Card Name">
+    <button onclick="trackCard()">Track</button>
+    <ul id="updates"></ul>
+
+    <script>
+        const socket = io("http://localhost:3000");
+
+        function trackCard() {
+            const cardName = document.getElementById("cardName").value;
+            socket.emit("track_card", cardName);
+        }
+
+        socket.on("market_update", (card) => {
+            const updates = document.getElementById("updates");
+            const li = document.createElement("li");
+            li.textContent = `${card.name}: $${card.marketValue} (Updated: ${new Date(card.lastUpdated).toLocaleTimeString()})`;
+            updates.appendChild(li);
+        });
+    </script>
+</body>
+</html>
