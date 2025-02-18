@@ -1,4 +1,5 @@
 const axios = require("axios");
+
 async function fetchMarketValue(cardName) {
   try {
     const response = await axios.get(
@@ -11,12 +12,13 @@ async function fetchMarketValue(cardName) {
           "RESPONSE-DATA-FORMAT": "JSON",
           "keywords": cardName,
           "paginationInput.entriesPerPage": 10,
-        },
+          "siteid": 0
+         },
       }
     );
-    const searchResponse =
-      response.data.findItemsByKeywordsResponse &&
-      response.data.findItemsByKeywordsResponse[0];
+
+    const searchResponse = response.data.findItemsByKeywordsResponse &&
+                           response.data.findItemsByKeywordsResponse[0];
     if (!searchResponse) {
       console.error("Invalid eBay response structure");
       return null;
@@ -25,6 +27,7 @@ async function fetchMarketValue(cardName) {
     const searchResult = searchResponse.searchResult && searchResponse.searchResult[0];
     const items = (searchResult && searchResult.item) || [];
     if (items.length === 0) return null;
+
     let totalPrice = 0;
     let validItems = 0;
     items.forEach((item) => {
@@ -39,7 +42,12 @@ async function fetchMarketValue(cardName) {
     if (validItems === 0) return null;
     return totalPrice / validItems;
   } catch (error) {
-    console.error("Error fetching market value from eBay:", error.message);
+    if (error.response) {
+      console.error("Error response data:", error.response.data);
+      console.error("Error response status:", error.response.status);
+    } else {
+      console.error("Error fetching market value from eBay:", error.message);
+    }
     return null;
   }
 }

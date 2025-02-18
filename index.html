@@ -8,7 +8,8 @@
 </head>
 <body>
     <h1>Pokémon Card Market Tracker</h1>
-    <input type="text" id="cardName" placeholder="Enter Pokémon Card Name">
+    <h4>Checking the average on basic cards</h4>
+    <input type="text" id="cardName" placeholder="Name">
     <button onclick="trackCard()">Track</button>
     <ul id="updates"></ul>
 
@@ -27,5 +28,19 @@
             updates.appendChild(li);
         });
     </script>
+
+    <script>
+        function Clock() {
+            const clockDiv = document.getElementById('clock');
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            clockDiv.textContent = `${hours}:${minutes}:${seconds}`;
+        }
+        Clock();
+        setInterval(Clock, 1000);
+    </script>
+    <div id="clock">Loading time...</div>
 </body>
 </html>
